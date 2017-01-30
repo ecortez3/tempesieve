@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="tempesieve:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="tempesieve-application-1.0-SNAPSHOT.war">
-      <element id="artifact" artifact-name="tempesieve:war exploded" />
-    </root>
-  </artifact>
-</component>
