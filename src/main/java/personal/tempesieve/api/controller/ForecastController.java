@@ -1,33 +1,42 @@
 package personal.tempesieve.api.controller;
 
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import personal.tempesieve.configs.WeatherConfigurations;
+import personal.tempesieve.entity.Forecast;
+import personal.tempesieve.rest.dao.ForecastRestDao;
 
 /**
  * $Author: ecortez
  * $Date: 1/11/2017
  */
 
-@RestController
+@Controller
 @RequestMapping(value = "/forecast")
 public class ForecastController {
 
-	//Endpoint for getting forecast
-	// "/api/72347b0b78ed72b4/forecast/q/IL/Chicago.json"
+	@Autowired
+	WeatherConfigurations weatherConfigurations;
+
+	@Autowired
+	ForecastRestDao forecastRestDao;
 
 	@RequestMapping(value = "/")
 	public String getForecast(){
-		RestTemplate rest = new RestTemplate();
-		
+		String url = getFormatedApiUrl();
+		String urlWithQuery = getQueryFormatedUrl(url);
+		Forecast forecast = forecastRestDao.getWeatherForecast(url,
+																weatherConfigurations.getLocation(),
+																weatherConfigurations.getFormat());
+		return forecast.toString();
+	}
 
-		HttpMessageConverter formHttpMessageConverter = new FormHttpMessageConverter();
-		HttpMessageConverter stringHttpMessageConverternew = new StringHttpMessageConverter();
-		rest.setMessageConverters(new HttpMessageConverter[]{formHttpMessageConverter, stringHttpMessageConverternew});
+	private String getFormatedApiUrl(){
+		return getQueryFormatedUrl(weatherConfigurations.getUrl().concat(weatherConfigurations.getId()));
+	}
 
-		return postForObject(getRestTemplate(), getDomain(), location);
+	private String getQueryFormatedUrl(String url){
+		return url.concat(weatherConfigurations.getQuery());
 	}
 }

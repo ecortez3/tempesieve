@@ -1,4 +1,4 @@
-package personal.tempesieve.dao;
+package personal.tempesieve.entity;
 
 /**
  * $Author: ecortez
